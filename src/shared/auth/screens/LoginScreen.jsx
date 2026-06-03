@@ -7,10 +7,12 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Alert
+  Alert,
+  TouchableOpacity,
 } from "react-native";
 
 import { useForm, Controller } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
 
 import { COLORS, SPACING, FONT_SIZE } from "../../../shared/constants/theme";
 import Input from "../../../shared/components/common/Input";
@@ -19,6 +21,8 @@ import Button from "../../../shared/components/common/Button";
 import kinalSportsLogo from "../../../../assets/kinal_sports.png";
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+
   const {
     control,
     handleSubmit,
@@ -55,18 +59,17 @@ const LoginScreen = () => {
           <Controller
             control={control}
             name="emailOrUsername"
-            rules={{required: "El correo o usuario es obligatorio",}}
+            rules={{ required: "El correo o usuario es obligatorio" }}
             render={({ field: { onChange, value } }) => (
               <Input
                 label="Email o usuario"
-                placeholder="correo@ejemplo.com o usario"
+                placeholder="correo@ejemplo.com o usuario"
                 onChangeText={onChange}
                 value={value}
                 autoCapitalize="none"
                 error={errors.emailOrUsername?.message}
               />
             )}
-            name="emailOrUsername"
           />
 
           <Controller
@@ -99,7 +102,9 @@ const LoginScreen = () => {
             ¿No tienes una cuenta?{" "}
           </Text>
 
-          <Text style={styles.link}>Regístrate</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Register") }>
+            <Text style={styles.link}>Regístrate</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
