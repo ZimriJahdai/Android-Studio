@@ -15,11 +15,12 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS, SPACING, FONT_SIZE } from "../../../shared/constants/theme";
 import Input from "../../../shared/components/common/Input";
 import Button from "../../../shared/components/common/Button";
+import { useAuth } from "../hooks/useAuth.js";
 
 import kinalSportsLogo from "../../../../assets/kinal_sports.png";
 
-const RegisterScreen = () => {
-  const navigation = useNavigation();
+const RegisterScreen = ({navigation}) => {
+  const { handleRegister, loading } = useAuth();
 
   const {
     control,
@@ -36,10 +37,29 @@ const RegisterScreen = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    Alert.alert("Registro", "Cuenta creada correctamente");
-  };
+const onSubmit = async (data) => {
+  try {
+    await handleRegister(data);
+
+    Alert.alert(
+      "Registro Exitoso",
+      "Tu cuenta ha sido creada. Ahora puedes iniciar sesión.",
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Login"),
+        },
+      ]
+    );
+  } catch (error) {
+    console.error(error);
+
+    const message =
+      error.response?.data?.message || "Error al registrarse";
+
+    Alert.alert("Error", message);
+  }
+};
 
   return (
     <KeyboardAvoidingView

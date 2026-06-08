@@ -17,27 +17,31 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS, SPACING, FONT_SIZE } from "../../../shared/constants/theme";
 import Input from "../../../shared/components/common/Input";
 import Button from "../../../shared/components/common/Button";
-
+import { useAuth } from "../hooks/useAuth.js";
 import kinalSportsLogo from "../../../../assets/kinal_sports.png";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const { control, handleSubmit, formState: { errors } } = useForm({
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
     defaultValues: {
-      emailOrUsername: "",
-      password: "",
-    },
-  });
+      emailUsernama: "",
+      password: ""
+    }
+  })
 
-  const onSubmit = (data) => {
-    console.log(data);
-    Alert.alert("Login", "Formulario enviado correctamente");
-  };
+  const onSubmit = async (data) => {
+  try {
+    await handleLogin(data);
+  } catch (error) {
+    console.error(error);
+
+    const message =
+      error.response?.data?.message || "Error al iniciar sesión";
+
+    Alert.alert("Error", message);
+  }
+};
 
   return (
     <KeyboardAvoidingView
